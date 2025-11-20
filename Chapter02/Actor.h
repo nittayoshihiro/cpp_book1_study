@@ -52,7 +52,7 @@ private:
 
 	// Transform
 	Vector2 mPosition;
-	float mScale;
+	float mScale;// アクターのスケール（1.0fが100%）
 	float mRotation;
 
 	std::vector<class Component*> mComponents;
