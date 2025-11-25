@@ -14,6 +14,7 @@
 #include "Ship.h"
 #include "Character.h"
 #include "BGSpriteComponent.h"
+#include "TileMapComponent.h"
 
 Game::Game()
 :mWindow(nullptr)
@@ -184,6 +185,8 @@ void Game::LoadData()
 	};
 	bg->SetBGTextures(bgtexs);
 	bg->SetScrollSpeed(-200.0f);
+	TileMapComponent* tm = new TileMapComponent(temp);
+	tm->SetTileSet(GetTexture("Assets/Tiles.png"),32,32);
 }
 
 void Game::UnloadData()
