@@ -29,6 +29,7 @@ void MoveComponent::Update(float deltaTime)
 	if (!Math::NearZero(mForwardSpeed))
 	{
 		Vector2 pos = mOwner->GetPosition();
+		//位置座標に（前方ベクトル*前進スピード*デルタタイム）を加算
 		pos += mOwner->GetForward() * mForwardSpeed * deltaTime;
 		
 		// (Screen wrapping code only for asteroids)

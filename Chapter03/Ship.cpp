@@ -9,16 +9,21 @@
 #include "Ship.h"
 #include "SpriteComponent.h"
 #include "InputComponent.h"
+#include "CircleComponent.h"
+#include "Asteroid.h"
 #include "Game.h"
 #include "Laser.h"
 
 Ship::Ship(Game* game)
 	:Actor(game)
 	,mLaserCooldown(0.0f)
+	,mShipActive(true)
+	,mShipCooldown(0.0f)
 {
 	// Create a sprite component
-	SpriteComponent* sc = new SpriteComponent(this, 150);
-	sc->SetTexture(game->GetTexture("Assets/Ship.png"));
+	mSpriteC = new SpriteComponent(this, 150);
+	mShipTex = game->GetTexture("Assets/Ship.png");
+	mSpriteC->SetTexture(mShipTex);
 
 	// Create an input component and set keys/speed
 	InputComponent* ic = new InputComponent(this);
@@ -28,11 +33,48 @@ Ship::Ship(Game* game)
 	ic->SetCounterClockwiseKey(SDL_SCANCODE_D);
 	ic->SetMaxForwardSpeed(300.0f);
 	ic->SetMaxAngularSpeed(Math::TwoPi);
+
+	mCircleC = new CircleComponent(this);
+	mCircleC ->SetRadius (40.0f);
 }
 
 void Ship::UpdateActor(float deltaTime)
 {
-	mLaserCooldown -= deltaTime;
+	if (mShipActive)
+	{
+		mLaserCooldown -= deltaTime;
+		// Do we intersect with an asteroid?
+		for (auto ast : GetGame()->GetAsteroids())
+		{
+			if (Intersect(*mCircleC, *(ast->GetCircle())))
+			{
+				// The first asteroid we intersect with,
+				// set ourselves and the asteroid to dead
+				//SetState(EDead);
+				//ast->SetState(EDead);
+				mSpriteC->SetTexture(nullptr);
+				mShipActive = false;
+				mShipCooldown = 2.0f;
+				break;
+			}
+		}
+	}
+	else
+	{
+		if (mShipCooldown < 0.0f)
+		{
+			mSpriteC->SetTexture(mShipTex);
+			SetPosition(Vector2(512.0f, 384.0f));
+			SetRotation(Math::PiOver2);
+			mShipActive = true;
+			mLaserCooldown = 0.0f;
+		}
+		else
+		{
+			mShipCooldown -= deltaTime;
+		}
+
+	}
 }
 
 void Ship::ActorInput(const uint8_t* keyState)
