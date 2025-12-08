@@ -13,6 +13,7 @@ MoveComponent::MoveComponent(class Actor* owner, int updateOrder)
 :Component(owner, updateOrder)
 ,mAngularSpeed(0.0f)
 ,mForwardSpeed(0.0f)
+,mMass(1.0f)
 {
 	
 }
@@ -41,4 +42,31 @@ void MoveComponent::Update(float deltaTime)
 
 		mOwner->SetPosition(pos);
 	}
+	else
+	{
+		Vector2 pos = mOwner->GetPosition();
+		//加速度=力の合計/質量
+		Vector2 acceleration = mSumOfForces * (1.0f / mMass);
+		//（半陰的）オイラー積分（Semi-implicit Euler）
+		// 速度を更新
+		mVelocity += acceleration * deltaTime;
+		//位置更新
+		pos += mVelocity * deltaTime;
+
+		// (Screen wrapping code only for asteroids)
+		if (pos.x < 0.0f) { pos.x = 1022.0f; }
+		else if (pos.x > 1024.0f) { pos.x = 2.0f; }
+
+		if (pos.y < 0.0f) { pos.y = 766.0f; }
+		else if (pos.y > 768.0f) { pos.y = 2.0f; }
+
+		mOwner->SetPosition(pos);
+		//力のリセット
+		mSumOfForces = Vector2(0.0f, 0.0f);
+	}
+}
+
+void MoveComponent::AddForce(Vector2 force)
+{
+	mSumOfForces += force;
 }

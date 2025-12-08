@@ -18,6 +18,7 @@ public:
 	void ActorInput(const uint8_t* keyState) override;
 private:
 	class SpriteComponent* mSpriteC;
+	class InputComponent* mInputC;
 	class CircleComponent* mCircleC;
 	SDL_Texture* mShipTex;
 	float mLaserCooldown;

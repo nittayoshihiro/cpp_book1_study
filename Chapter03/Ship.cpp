@@ -26,13 +26,13 @@ Ship::Ship(Game* game)
 	mSpriteC->SetTexture(mShipTex);
 
 	// Create an input component and set keys/speed
-	InputComponent* ic = new InputComponent(this);
-	ic->SetForwardKey(SDL_SCANCODE_W);
-	ic->SetBackKey(SDL_SCANCODE_S);
-	ic->SetClockwiseKey(SDL_SCANCODE_A);
-	ic->SetCounterClockwiseKey(SDL_SCANCODE_D);
-	ic->SetMaxForwardSpeed(300.0f);
-	ic->SetMaxAngularSpeed(Math::TwoPi);
+	mInputC = new InputComponent(this);
+	mInputC->SetForwardKey(SDL_SCANCODE_W);
+	mInputC->SetBackKey(SDL_SCANCODE_S);
+	mInputC->SetClockwiseKey(SDL_SCANCODE_A);
+	mInputC->SetCounterClockwiseKey(SDL_SCANCODE_D);
+	mInputC->SetMaxForwardSpeed(300.0f);
+	mInputC->SetMaxAngularSpeed(Math::TwoPi);
 
 	mCircleC = new CircleComponent(this);
 	mCircleC ->SetRadius (40.0f);
@@ -68,6 +68,12 @@ void Ship::UpdateActor(float deltaTime)
 			SetRotation(Math::PiOver2);
 			mShipActive = true;
 			mLaserCooldown = 0.0f;
+			// 物理状態をリセット
+			//mInputC->AddForce(Vector2(0.0f, 0.0f));
+
+			// 速度もリセットしたい場合
+			mInputC->SetVelocity(Vector2(0.0f, 0.0f));
+			mInputC->ClearForces();
 		}
 		else
 		{
