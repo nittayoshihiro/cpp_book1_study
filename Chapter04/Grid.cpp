@@ -11,6 +11,8 @@
 #include "Tower.h"
 #include "Enemy.h"
 #include <algorithm>
+#include "AIComponent.h"
+#include "AIState.h"
 
 Grid::Grid(class Game* game)
 :Actor(game)
@@ -210,6 +212,11 @@ void Grid::BuildTower()
 		if (FindPath(GetEndTile(), GetStartTile()))
 		{
 			Tower* t = new Tower(GetGame());
+			AIComponent* aic = new AIComponent(t);
+			aic->RegisterState(new TowerAIInvestigate(aic));
+			aic->RegisterState(new TowerAIAlert(aic));
+			aic->RegisterState(new TowerAIAttack(aic));
+			aic->ChangeState("TowerAIInvestigate");
 			t->SetPosition(mSelectedTile->GetPosition());
 		}
 		else

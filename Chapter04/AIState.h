@@ -69,3 +69,52 @@ public:
 	const char* GetName() const override
 	{ return "Attack"; }
 };
+
+class TowerAIInvestigate : public AIState
+{
+public:
+	TowerAIInvestigate(class AIComponent* owner)
+		:AIState(owner)
+	{ }
+
+	void Update(float deltaTime) override;
+	void OnEnter() override;
+	void OnExit() override;
+
+	const char* GetName() const override
+	{ return "TowerAIInvestigate"; }
+};
+
+class TowerAIAlert : public AIState
+{
+public:
+	TowerAIAlert(class AIComponent* owner)
+		:AIState(owner)
+	{ }
+
+	void Update(float deltaTime) override;
+	void OnEnter() override;
+	void OnExit() override;
+
+	const char* GetName() const override
+	{
+		return "TowerAIAlert";
+	}
+};
+
+class TowerAIAttack : public AIState
+{
+public:
+	TowerAIAttack(class AIComponent* owner)
+		:AIState(owner)
+	{ }
+
+	void Update(float deltaTime) override;
+	void OnEnter() override;
+	void OnExit() override;
+
+	const char* GetName() const override
+	{
+		return "TowerAIAttack";
+	}
+};

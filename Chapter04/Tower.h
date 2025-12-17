@@ -14,9 +14,14 @@ class Tower : public Actor
 public:
 	Tower(class Game* game);
 	void UpdateActor(float deltaTime) override;
+	float GetAttackRange()const { return AttackRange; };
+	float GetNextAttack()const { return mNextAttack; };
+	void ReduceAttackTime(float deltaTime){mNextAttack -= deltaTime; };
+	void ResetAttackTime(){ mNextAttack = AttackTime; };
+
 private:
 	class MoveComponent* mMove;
 	float mNextAttack;
-	const float AttackTime = 2.5f;
+	const float AttackTime = 1.0f;
 	const float AttackRange = 100.0f;
 };
